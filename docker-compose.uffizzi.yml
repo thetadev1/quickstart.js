@@ -36,6 +36,10 @@ services:
       PGDATABASE: postgres # "${PGUSER}" # for use with GitHub Actions secrets + reusable workflow
       PGPASSWORD: postgres # "${PGPASSWORD}" # for use with GitHub Actions secrets + reusable workflow
       PORT: 8088
+    deploy:
+      resources:
+        limits:
+          memory: 250M
 
   vote:
     image: "${VOTE_IMAGE}"
