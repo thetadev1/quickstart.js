@@ -178,3 +178,32 @@ jobs:
       contents: read
       pull-requests: write
       id-token: write
+
+  update-persistent-url:
+    name: Update Persistent URL
+    needs: deploy-uffizzi-preview
+    steps:
+    - id: 'auth'
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
+
+    - name: 'Render URL map definition'
+      run: |
+        cat <<EOF > url-map.yaml
+        defaultUrlRedirect:
+          hostRedirect: $(basename ${{ needs.deploy-uffizzi-preview.outputs.url }})
+          httpsRedirect: true
+          redirectResponseCode: MOVED_PERMANENTLY_DEFAULT
+          stripQuery: false
+        kind: compute#urlMap
+        name: deleteme-2022-11
+
+    - name: 'Update GCP Load Balancer'
+      run: 'gcloud compute url-maps import deleteme-2022-11 --source url-map.yaml --project uffizzi-pro-qa-gke'
