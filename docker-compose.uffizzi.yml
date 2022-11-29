@@ -2,7 +2,7 @@
 x-uffizzi:
   ingress:
     service: loadbalancer
-    port: 8080  
+    port: 801
   continuous_previews:
     delete_preview_after: 1h
 
@@ -56,9 +56,9 @@ services:
     environment:
       PORT: 8080
       VOTE_HOST: "localhost"
-      VOTE_PORT: "8888"
+      VOTE_PORT: "0000"
       RESULT_HOST: "localhost"
-      RESULT_PORT: "8088"
+      RESULT_PORT: "0000"
     deploy:
       resources:
         limits:
